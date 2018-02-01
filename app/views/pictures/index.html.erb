@@ -1,0 +1,39 @@
+<p></p>
+
+<%= link_to '新規投稿', new_picture_path %><br>
+
+<p></p>
+
+<table>
+  <tbody>
+    <% @pictures.reverse_each do |picture| %>
+      <section class = "waku">
+      <span>
+        <% @picture = Picture.find(picture.id) %>
+        <%= image_tag @picture.user.profile_image, :width => '20', :height => '20' %>
+        <%= @picture.user.name %>
+      </span>
+      </section>
+      <section class = "waku">
+      <span>
+        <%= image_tag picture.image, :width => '200', :height => '200' %>
+      </span><br>
+      <span>
+        <%= @picture.user.name %><br>
+        <%= picture.content %><br>
+        <span><br></span>
+        <%= time_ago_in_words(picture.created_at) %>
+      </span>
+      </section><br>
+
+      <section class="blog-links">
+        <%= link_to 'Show', picture, class: 'btn btn-default'%>
+          <% if picture.user_id == current_user.id %>
+          <%= link_to 'Edit', edit_picture_path(picture), class: 'btn btn-info' %> |
+          <%= link_to 'Destroy', picture, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          <% end %>
+      </section><br>
+
+    <% end %>
+  </tbody>
+</table>

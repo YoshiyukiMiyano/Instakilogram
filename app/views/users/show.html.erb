@@ -1,0 +1,18 @@
+<h1><%= @user.name %>のページ</h1>
+
+  <p>メールアドレス: <%= @user.email %></p>
+  <%= image_tag @user.profile_image, :width => '110', :height => '100' %>
+
+
+    <div class="row"></div>
+    <h3>お気に入り一覧</h3>
+    <% @user.favorite_pictures.reverse_each do |user| %>
+      <div class="col-xs-12 col-md-12 blog-panel2">
+        <%= image_tag user.image, :width => '200', :height => '200' %><br>
+        <%= user.content %>
+      </div>
+    <% end %>
+    </div>
+
+
+<%= link_to 'Back', pictures_path %>

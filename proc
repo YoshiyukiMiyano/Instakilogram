@@ -1,0 +1,247 @@
+RailsでDB(PostgreSQL)を使う
+PostgreSQLを起動する
+  sudo service postgresql start
+    #再起動
+    sudo service postgresql restart
+    #停止
+    sudo service postgresql stop
+      #PostgreSQLを起動するコマンドは、PostgreSQLを使用する場合、一日一回行う必要があります。
+      #これはCloud9の場合、24時間で、起動が停止してしまうからです。
+      #以下、エラー時も起動コマンド
+      #  PG::ConnectionBad: could not connect to server: Connection refused
+         Is the server running locally and accepting
+         connections on Unix domain socket "/var/run/postgresql/.s.PGSQL.5432"?
+         
+DB作成はsampleディレクトリへ移動
+  cd sample
+  
+データベースを作成
+  #CREATE DATABASE データベース名;
+  rails db:create
+    #日本語を扱うためには、encodingを、unicodeに設定する
+    #encodingをunicodeにするためには、templateとして、template0を指定
+    #通常であれば、データベースを作成する際、template1がひな形
+  #ActiveRecordでは、マイグレーションという仕組みを使用して、テーブルを作成
+  #テーブルの設計図であるマイグレーションファイルを作成
+  #マイグレーションファイルとは、Rubyで書かれた テーブルの設計図
+
+マイグレーションファイルを作成
+  rails g migration マイグレーションファイル名
+  rails d migration ファイル名(削除)
+    #目的例	命名
+    #例 blogsテーブルを作成する場合	CreateBlogs
+    #例 blogsテーブルを削除する場合	DropBlogs
+    #例 blogsテーブルにtitleカラムを追加する場合	AddTitleToBlogs
+    #例 blogsテーブルに複数のカラムを追加する場合	AddColumnsToBlogs
+    #例 blogsテーブルからtitleカラムを削除する場合	RemoveTitleFromBlogs
+    #例 blogsテーブルから複数のカラムを削除する場合	RemoveColumnsFromBlogs
+    #例 blogsテーブルのtitleカラムの名前をcontentに変更する場合	RenameFromTitleToContentOnBlogs
+    #例 blogsテーブルにtitleカラムのindexを追加する場合	AddIndexTitleToBlogs
+    #例 blogsテーブルに複数のカラムのindexを追加する場合	AddIndexesToBlogs
+  #例 rails g migration CreateBlogs
+    #マイグレーションファイルは db/migrateディレクトリ配下に配置される
+      #基本的に何か追加したり、削除したり、更新したりする際は、
+      #マイグレーションファイルを新たに作成していく必要がある
+        #マイグレーションファイルは名前に作成日時が記録される。
+        #マイグレーションファイルは間違えて作成した場合でなければ
+        #削除するべきではなく、新しいカラムの作成ごとに新しいファイルを作るべきである。
+  #ActiveRecordには、マイグレーションしたものを元に戻すrollbackという仕組みが用意されている
+  #upとdownを使用することで、マイグレーションとロールバック(rollback)で実行するコードを分けることができ
+  
+テーブルを作成
+  create_table :テーブル名
+  #create_table :blogs do |t|
+  #  t.データ型 :カラム名
+  #end
+  
+マイグレーション
+  rails db:migrate
+  #db/schema.rb というファイルに最新のテーブルの状態が書き込まれる
+  #schema.rbを編集することは基本的にありません。
+  #schema.rbは、テーブルの状態を確認するものである
+  rails db:rollback
+  #マイグレーションによって操作されたテーブル操作を戻す
+
+テーブル操作
+  #INSERT INTO (table_name) ((column1), (column2), ...) VALUES ((value1), (value2), ...);
+  
+モデル作成
+  #Railsアプリケーション上で、ActiveRecordを使用するためには、モデルを作成し、
+  #そのモデルにActiveRecordのクラスを継承させるのが基本
+  rails g model モデル名
+    #rails g modelコマンドを実行するとモデルファイルと共に、マイグレーションファイルも作成されます。
+    #通常はモデルを作成し、テーブルを作成するという流れがスムーズですが、
+    #今回はテーブルから作成したので、マイグレーションファイルは不要です。
+    #従って、モデルを作成する際にマイグレーションファイルの作成をスキップします。
+    #マイグレーションファイルの作成をスキップするためには、--skipオプションを使用
+    #rails g model モデル名　--skip
+      #コントローラ名を必ず複数形にし、モデル名を必ず単数形にして作成することです。
+      #こうしないと、同じ名前で紐付け用としているコントローラとモデルの紐付けがうまくいかず、
+      #エラーになります。
+    #app/modelsフォルダに格納される
+    # ApplicationRecordは、この処理では編集しませんが、すべてのモデルに共通する処理を記述することが主な担当
+    #Rails入門11【ActiveRecordとモデルの命名規約について】参照
+
+ActiveRecord
+    # Rubyのオブジェクト(Object)とリレーショナルデータベース(Relational Database)の
+    # 対応づけ(Mapping)を行っています。
+    # Ruby on RailsのORMapperに当たるものがActiveRecordなのです。
+  Mappingのための命名規則
+    #クラス名がBookの場合、booksというテーブルに対応しています。
+    #Railsは、開発者が名付けたモデルのクラス名を複数形にしDBのテーブルを探してくれます。
+  ActiveRecordのメソッド
+    Railsアプリ(blogapp)を作成
+    #rails new blogapp -d postgresql(workspace直下)
+    ブログモデルを作成
+    #cd blogapp
+    #rails g model blog title:string content:text
+    blogappのDBを作成
+    #rails db:create
+    blogsテーブルを作成
+    #rails db:migrate
+    コマンドコンソールを起動
+    #rails c
+      #ActiveRecord入門2【ActiveRecordの様々なメソッドについて】/2参照
+      #createメソッド
+        #Blog.create(title: "Hello!", content: "Today is ...")
+          #※idは自動的に挿入されます。
+        Blog.create(title: "GoodMorning!", content: "My Father will…")
+      #allメソッド
+        #テーブルからすべてのレコードをとってくるメソッド
+        Blog.all
+      #newメソッド
+        #newメソッドを実行することで、そのクラス（モデル）のインスタンスを作成
+        #Blog.create(title: "GoodEvening!", content: "My Brother will…")
+      #saveメソッド
+        #newメソッドはレコードの新規追加を行わないので、saveメソッドを使用してレコードの新規追加を行う
+        #blog = Blog.new(title: "GoodNight!", content:"MyMatherwill...")
+        #blog.save
+        
+Routing
+  #config/routes.rb
+    #Rails.application.routes.draw do
+      # 追記する
+      #resources :blogs
+    #end
+  #rails routes(確認)
+
+Controller
+  #app/controllers/blogs_controller.rb
+    #class BlogsController < ApplicationController
+      #def index
+      #end
+
+      # 追記する
+      #def new
+      #end
+    #end
+
+Viewの作成
+  #Viewはデフォルトでview/blogs/new.html.erbが呼び出される
+  
+  form_with
+  #<%= form_with(model: Blog.new) %>
+    #<form action="/blogs" accept-charset="UTF-8" data-remote="true" method="post">
+      #<input name="utf8" type="hidden" value="✓">
+      #<input type="hidden" name="authenticity_token" value="sAc5l6rFDxpzuKpWF73d81UrQrqAmhReoq8xrgOlzz+PgN1U8GKNgsABTWAw3Grj306HdfBoJwx1xkAHMwjdjA==">
+    #</form>
+    #form_with 引数
+      #<%= form_with(model: モデルのインスタンス) %>
+        #Blog.new、つまりブログモデルのインスタンスを引数として渡している
+        #form_withメソッドは、デフォルトではJavaScript用のリクエストが発生
+        #local: trueとすることで、HTML用のリクエストを発行する
+      #フォームパーツについて
+        #form.labelはHTMLのlabelタグを作成するメソッド
+        #form.text_fieldは、属性(type)をtextに指定した、HTMLのinputタグを作成するメソッド
+        #form.submitは、属性(type)をsubmitに指定した、HTMLのinputタグを作成するメソッド
+        #valueは、form_withに渡されたモデルクラスによって代わる
+        #valueを変更する場合、オプションを指定する必要がある
+
+確認画面を作成する
+  #config/routes.rb にcollectionでconfirmのルーティングを定義
+    config/routes.rb
+      #Rails.application.routes.draw do
+      #  resources :blogs do(do 追加)
+      #    collection do(追加)
+      #      post :confirm(追加)
+      #    end(追加)
+      #  end
+
+    rails routes
+
+
+
+新規作成(ActiveRecord)
+    #新規フォルダ作成
+      rails new hogehoge -d postgresql(workspace直下)
+    #ブログモデルを作成
+      cd hogehoge
+      rails g model hogehoge title:string content:text ......(テーブルの数分記載する)
+      rails g controller hogehoge
+    #日本語を扱うためには、encodingを、unicodeに設定する
+    #encodingをunicodeにするためには、templateとして、template0を指定
+    #通常であれば、データベースを作成する際、template1がひな形
+      /config/locales/databese.yml
+        default: &default
+        省略
+        template: template0(追記)
+    #blogappのDBを作成
+      rails db:create
+    #hogehogeテーブルを作成
+      rails db:migrate
+    #コマンドコンソールを起動
+      rails c
+
+    #newメソッド
+    #newメソッドを実行することで、そのクラス（モデル）のインスタンスを作成
+      Blog.create(title: "GoodMorning!", content: "My Father will…")
+    #allメソッド
+    #テーブルからすべてのレコードをとってくるメソッド
+      Blog.all
+    #saveメソッド
+    #newメソッドはレコードの新規追加を行わないので、saveメソッドを使用してレコードの新規追加を行う
+    #blog = Blog.new(title: "GoodNight!", content:"MyMatherwill...")
+      blog.save
+
+
+サーバーを起動し、確認する
+  sudo service postgresql start
+    #再起動
+    sudo service postgresql restart
+    #停止
+    sudo service postgresql stop
+  rails s -b $IP -p $PORT
+  
+  
+  
+  rails _5.1.2_ new taskrails2 -d postgresql
+  cd taskrails2
+  sudo service postgresql start
+  
+  config/database.yml
+    template: template0
+  
+  rails db:create
+  rails g model blogs title:string content:text
+  rails g controller blogs new
+  
+  
+  
+  heroku
+  git add -A
+  git commit -m "init"
+  heroku create
+  git push heroku master
+  heroku run rake db:migrate
+  
+  だめなとき
+  rm -rf .git
+　git init
+　rake assets:precompile RAILS_ENV=production
+　を実施してから上記
+　
+　
+　テーブル構成を確認する
+　DB名column_names
+　例)
+　User.column_names

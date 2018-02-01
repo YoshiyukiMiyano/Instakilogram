@@ -1,0 +1,37 @@
+<h1>Editing Picture</h1>
+
+<%= form_with(model: @picture, local: true) do |form| %>
+  <% if @picture.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= @picture.errors.count %>件のエラーがあります。</h2>
+      <ul>
+
+      <% @picture.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section>
+  <span>
+    <%= image_tag @picture.image %>
+  </span><br>
+  <span class="col-xs-5 col-md-5"></span>
+  <span class="col-xs-7 col-md-7">
+    <%= form.file_field :image %>
+    <%= form.hidden_field :image_cache %>
+  </span>
+  </section>
+
+  <section>
+  <span>
+    <%= form.label :content %>
+    <%= form.text_field :content %>
+  </span>
+  </section>
+  <%= form.submit %>
+<% end %>
+
+<%= link_to 'Show', @picture %> |
+<%= link_to 'Back', pictures_path %>

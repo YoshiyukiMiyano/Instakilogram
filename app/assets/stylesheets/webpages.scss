@@ -1,0 +1,62 @@
+// Place all the styles related to the webpages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+h1, h2, h3, h4, h5 {
+  border-style: dotted;
+  border-width: 1px;
+  padding: 10px;
+}
+
+.panel-body{
+  padding: 1px;
+}
+
+div, p {
+  border-style: solid; 
+  border-width: 1px;
+}
+
+div.blog-panel {
+  height: 200px;
+}
+
+div.blog-panel {
+  height: 200px;
+  margin: 20px 0;
+  padding: 10px;
+}
+
+div.blog-panel-list {
+  height: 100px;
+  margin: 20px 0;
+  padding: 10px;
+}
+
+/*
+.container{
+    margin-top:20px;
+    padding-bottom: 10px;
+} 
+*/
+
+.container-fluid{
+    background-color:#012F4B;
+    color:#fff;
+}
+
+.navbar-brand{
+  color: pink;
+}
+
+.navbar-header{
+    background-color:#F1F1F1;
+}
+
+.menu{
+    background-color:#012F4B;
+    color:#fff;
+}
+.menu li {
+    padding:5% 10%;
+    text-align:center;
+}

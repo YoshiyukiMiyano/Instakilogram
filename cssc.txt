@@ -1,0 +1,60 @@
+CSSの文法
+
+・バックエンドエンジニアとして最低限知っておいて欲しい
+・ポートフォリオ作成で必ず使う
+
+具体的には以下を指します。
+
+・線
+・背景
+・高さや幅の指定
+・余白
+
+◆線
+線を挿入するには border を使用します。
+線の 種類 や 色 や 太さ を指定する方法を以下に示します。
+
+種類	        意味
+border-style	点線や実線など
+border-color	線の色
+border-width	線の太さ
+
+border-style に関しては solid（１本線） や double（２本線） 、 dotted（点線） を指定することができます。
+
+ここでは要素の配置をわかりやすくするために 全ての要素を線で囲み ます。
+こうすることで要素がブロックのように、目に見える形になります。
+app/assets/stylesheets/blogs.scss
+
+
+◆背景
+背景の操作は background を使用します。
+
+種類	意味
+background-color	背景色
+background-image	背景画像
+
+今回は自分の好きな色を背景色にしましょう。
+app/assets/stylesheets/scaffolds.scss
+
+
+◆高さや幅の指定
+幅の指定は width 、高さの指定は height を使用します。
+これらは ブロック要素 のみ適用することができます。
+app/assets/stylesheets/blogs.scss
+
+
+◆余白
+余白の操作は margin または padding を使用します。
+これらの違いは どこに余白を持たせるか です。
+
+marginは 要素の外側 に余白を持たせるときに使われます。
+paddingは 要素の内側 に余白を持たせるときに使われます。
+さらにmarginやpaddingの指定の仕方によって、上下左右に持たせる値が変わります。
+値の指定は以下のように記述することができます。
+
+種類	意味
+margin/padding: 10px	上10px 右10px 左10px 下10px
+margin/padding: 10px 20px	上10px 右20px 左20px 下10px
+margin/padding: 10px 20px 30px	上10px 右20px 左20px 下30px
+margin/padding: 10px 20px 30px 40px	上10px 右20px 左30px 下40px
+app/assets/stylesheets/blogs.scss
